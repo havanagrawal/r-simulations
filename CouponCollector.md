@@ -43,7 +43,7 @@ coupon_collector_mean_attempts = function(n, num_iterations=10^3) {
 
 Finally, we write a function that returns the actual expectation. This is derived from the formula:
 
-![Coupon Collector Expectation](CouponCollectorExpectationEquation.png)
+![Coupon Collector Expectation](images/CouponCollectorExpectationEquation.png)
 
 ``` r
 actual_expectation_for_coupon_collector = function(n) {
