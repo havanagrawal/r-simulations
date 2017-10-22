@@ -8,6 +8,7 @@ Problem
 >
 > 1.  What is the PMF of how many of the 11 songs are from his favorite album?
 > 2.  What is the probability that there are 2 (or more) songs from the same album among the 11 songs he listens to?
+> 3.  A pair of songs is a match if they are from the same album. If, say, the 1st, 3rd, and 7th songs are all from the same album, this counts as 3 matches. Among the 11 songs he listens to, how many matches are there on average?
 
 -   Introduction to Probability (J. Blitzstein), Exercises 4.12, Problem 78.
 
@@ -77,7 +78,7 @@ probability_of_2_or_more_from_same_album <- sum(simulations) / num_iterations
 probability_of_2_or_more_from_same_album
 ```
 
-    ## [1] 0.69445
+    ## [1] 0.69361
 
 We can verify this by using the basic definition of probability, and calculate the probability of no two songs being from the same album. The answer to this question is the complement:
 
@@ -95,3 +96,5 @@ probability_of_2_or_more_from_same_album
 ```
 
     ## [1] 0.6946347
+
+### Expected Number of Matches
