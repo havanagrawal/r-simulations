@@ -77,6 +77,21 @@ probability_of_2_or_more_from_same_album <- sum(simulations) / num_iterations
 probability_of_2_or_more_from_same_album
 ```
 
-    ## [1] 0.69554
+    ## [1] 0.69445
 
 We can verify this by using the basic definition of probability, and calculate the probability of no two songs being from the same album. The answer to this question is the complement:
+
+``` r
+prob_of_no_two_songs_from_same_album <- 1
+
+# The second song has only 490 options
+# Then the third song has 480, and so on...
+for (i in seq(490, 400, -10)) {
+  prob_of_no_two_songs_from_same_album <- prob_of_no_two_songs_from_same_album * (i/500)
+}
+
+probability_of_2_or_more_from_same_album <- 1 - prob_of_no_two_songs_from_same_album
+probability_of_2_or_more_from_same_album
+```
+
+    ## [1] 0.6946347
