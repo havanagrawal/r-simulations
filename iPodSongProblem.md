@@ -21,25 +21,40 @@ For the PMF, we can use simulations to visually analyze the problem:
 ``` r
 all_songs <- c(rep(1, 10), rep(0, 490))
 
-num_iterations <- 10^6
+num_iterations <- 10^5
 
 single_simulation <- function() {
-  sum(sample(all_songs, 11))
+  sum(sample(all_songs, 11, replace = TRUE))
 }
 
-experimental_distribution <- tabulate(replicate(num_iterations, single_simulation()))
-print(experimental_distribution)
-```
+experimental_distribution <- tabulate(as.factor(replicate(num_iterations, single_simulation())), nbins=12) / num_iterations
 
-    ## [1] 182917  17190    891     23      1
-
-``` r
-barplot(experimental_distribution, 
-        xlab = 'Number of songs from favorite album', 
-        names.arg = 0:(length(experimental_distribution)-1), 
-        col = 'white',
-        main = 'Distribution of # Songs from Favorite Album'
-        )
+barplot(
+  experimental_distribution, 
+  xlab = 'Number of songs from favorite album', 
+  names.arg = 0:11,
+  col = 'white',
+  main = 'Distribution of # Songs from Favorite Album'
+)
 ```
 
 ![](iPodSongProblem_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-1-1.png)
+
+Theoretically, this can be thought of as a binomial distribution. We can imagine the 10 favorite songs as successful cases, and the rest as failure. Probability of a song from the favorite album is 10/500 = 0.02. Therefore, P(X = x) = bin(11, 0.02). We can verify this in R:
+
+``` r
+theoretical_distribution <- dbinom(x = 0:11, size = 11, prob = 0.02)
+barplot(
+  theoretical_distribution,
+  xlab = 'Number of Songs from Favorite Album', 
+  names.arg = 0:11,
+  col = 'white',
+  main = 'Binomial Distribution of # Favorite Songs'
+)
+```
+
+![](iPodSongProblem_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-2-1.png)
+
+Clearly, the experimental and theoretical distributions are identical.
+
+### Probability of 2 or More Songs from the Same Album
