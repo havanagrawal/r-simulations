@@ -58,3 +58,25 @@ barplot(
 Clearly, the experimental and theoretical distributions are identical.
 
 ### Probability of 2 or More Songs from the Same Album
+
+The first option is to simply simulate the scenario, and use the empirical result:
+
+``` r
+all_songs <- rep(1:50, 10)
+
+has_two_or_more_songs_from_same_album <- function() {
+  length(unique(sample(all_songs, 11, replace = TRUE))) != 11
+}
+
+num_iterations <- 10^5
+
+simulations <- replicate(num_iterations, has_two_or_more_songs_from_same_album())
+
+probability_of_2_or_more_from_same_album <- sum(simulations) / num_iterations
+
+probability_of_2_or_more_from_same_album
+```
+
+    ## [1] 0.69554
+
+We can verify this by using the basic definition of probability, and calculate the probability of no two songs being from the same album. The answer to this question is the complement:
