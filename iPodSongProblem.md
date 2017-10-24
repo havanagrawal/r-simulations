@@ -78,7 +78,7 @@ probability_of_2_or_more_from_same_album <- sum(simulations) / num_iterations
 probability_of_2_or_more_from_same_album
 ```
 
-    ## [1] 0.69361
+    ## [1] 0.69583
 
 We can verify this by using the basic definition of probability, and calculate the probability of no two songs being from the same album. The answer to this question is the complement:
 
@@ -98,3 +98,47 @@ probability_of_2_or_more_from_same_album
     ## [1] 0.6946347
 
 ### Expected Number of Matches
+
+Again, we can take a quick look at the answer with simulation:
+
+``` r
+all_songs <- rep(1:50, 10)
+
+num_matches_with_k_songs_from_same_album <- function(k) {
+  choose(k, 2)
+}
+
+number_of_matches <- function() {
+  random_songs <- sample(all_songs, 11, replace=TRUE)
+  # tabulate will group by each album
+  # And sapply will count the number of matches possible for x songs from each album
+  num_matches_per_album <- sapply(tabulate(random_songs), num_matches_with_k_songs_from_same_album)
+  
+  # Finally we add up all the matches
+  sum(num_matches_per_album)
+}
+
+num_iterations <- 10^5
+
+# We take expected (mean) value of the number of matches
+mean(replicate(num_iterations, number_of_matches()))
+```
+
+    ## [1] 1.10064
+
+We can verify this by using indicator variables and the linearity of expectation. If I(ij) is the indicator variable that the ith and jth song are from the same album, and X the number of matches, then we have:
+
+![NumberOfMatches](images/iPodSongEquation_01.png)
+
+Taking expectation, and applying the fundamental bridge of probability and expectation we have:
+
+![Expectation](images/iPodSongEquation_02.png)
+
+``` r
+e_X = choose(11, 2) * 0.02
+e_X
+```
+
+    ## [1] 1.1
+
+This is the same answer as the one we got using simulations, verifying that our analysis is correct.
