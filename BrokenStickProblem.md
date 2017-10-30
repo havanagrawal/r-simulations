@@ -52,9 +52,9 @@ divisions <- 100
 # So cdf[5] is the value of F(0.05)
 cdf <- rep(0, 1 + divisions)
 
-x_vals = seq(0, 1, 1/divisions)
+x_vals <- seq(0, 1, 1/divisions)
 
-k = 0
+k <- 1
 for (i in x_vals) {
   cdf[k] <- mean(r_sample < i)
   k <- k + 1
@@ -83,3 +83,23 @@ legend("topleft", legend = c("Experimental", "Theoretical"), pch = c(1, 45), col
 ![](BrokenStickProblem_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-1.png)
 
 Our simulation appears to have given the correct results!
+
+### Expected Value of R
+
+This is fairly easy to calculate at this point:
+
+``` r
+mean(r_sample)
+```
+
+    ## [1] 0.3849215
+
+To verify this, we can solve the expression for E(X) by integrating the PDF under appropriate limits, and finally we arrive to the value of ln(4) - 1
+
+``` r
+log(4) - 1
+```
+
+    ## [1] 0.3862944
+
+Again, our empirical value seems to be extremely close to the actual value.
