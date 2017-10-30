@@ -92,7 +92,7 @@ This is fairly easy to calculate at this point:
 mean(r_sample)
 ```
 
-    ## [1] 0.3849215
+    ## [1] 0.3856789
 
 To verify this, we can solve the expression for E(X) by integrating the PDF under appropriate limits, and finally we arrive to the value of ln(4) - 1
 
@@ -103,3 +103,54 @@ log(4) - 1
     ## [1] 0.3862944
 
 Again, our empirical value seems to be extremely close to the actual value.
+
+### Expected Value of 1/R
+
+Before we begin to calculate this value, I want to take a moment to reiterate the danger of mistaking E(g(X)) with g(E(X)) when g(X) is non-linear. My initial thought was that if the expected value of R is 0.386, then the expected value of 1/R should be 1/0.386, but this turns out to be incorrect. Using simulations, we can verify this:
+
+``` r
+num_iterations <- 10^4
+expected_1_by_r <- function() {
+  x <- runif(num_iterations)
+  
+  # Generate values of R
+  r_sample <- sapply(x, short_by_long)
+  
+  mean(1/r_sample)
+}
+
+expected_r <- function() {
+  x <- runif(num_iterations)
+  
+  # Generate values of R
+  r_sample <- sapply(x, short_by_long)
+  
+  mean(r_sample)
+}
+
+means_of_1_by_r <- replicate(100, expected_1_by_r())
+means_r <- replicate(100, expected_r())
+
+par(mfrow=c(2,1))
+hist(means_r, breaks = seq(0, 1, 0.01))
+hist(means_of_1_by_r[means_of_1_by_r <= 100], breaks = seq(0, 100, 1))
+```
+
+![](BrokenStickProblem_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-6-1.png)
+
+We can compare the plots of the means of R and 1/R. For R, the frequency of values closer to the actual mean is extremely high, as opposed to the histogram of mean of 1/R, which appears to be all over the place. Increasing the number of iterations has no visible effect on the histogram.
+
+At this stage, we can assume that 1/R does not converge. While I cannot think of an exact reason, my intuition says that the ratio of the longer to the shorter piece can range from 1 to infinity. This is a very long tail of higher "payoff" with lower and lower probabilities, approaching 0 asymptotically:
+
+``` r
+pdf_of_1_by_r <- function(x){
+  2/(1+x)^2
+}
+
+curve(expr = pdf_of_1_by_r, from=1, to=20, n = 10000)
+abline(h=0, lty=2)
+```
+
+![](BrokenStickProblem_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-7-1.png)
+
+This is similar to the St. Petersburg paradox from the textbook.
